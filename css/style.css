@@ -1,0 +1,444 @@
+/* ==========================================================
+   Base
+   ========================================================== */
+:root {
+  --color-bg: #0a0a0c;
+  --color-bg-alt: #131316;
+  --color-text: #f4f4f5;
+  --color-text-dim: #9a9aa2;
+  --color-accent: #ff2d4d;
+  --color-accent-dim: #7a0f1e;
+  --color-border: #26262b;
+  --max-width: 1080px;
+  --font-base: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  --font-display: "Bebas Neue", var(--font-base);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-base);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.9em 2.2em;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-radius: 999px;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  font-size: 0.9rem;
+  transition: border-color 0.25s, transform 0.25s, background 0.25s, color 0.25s;
+}
+
+.btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.btn--primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: transparent;
+  color: var(--color-accent);
+}
+
+.text-link {
+  color: var(--color-text-dim);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.1em;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.text-link:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* ==========================================================
+   Scroll reveal
+   ========================================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================
+   Header
+   ========================================================== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 12, 0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1.1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+}
+
+.nav {
+  display: flex;
+  gap: 2.2rem;
+}
+
+.nav a {
+  position: relative;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text-dim);
+  transition: color 0.2s;
+  padding-bottom: 0.3em;
+}
+
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: 0;
+  height: 1px;
+  background: var(--color-accent);
+  transition: right 0.25s ease;
+}
+
+.nav a:hover {
+  color: var(--color-text);
+}
+
+.nav a:hover::after {
+  right: 0;
+}
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  display: block;
+  height: 2px;
+  background: var(--color-text);
+}
+
+/* ==========================================================
+   Hero
+   ========================================================== */
+.hero {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(10, 10, 12, 0.35) 0%, rgba(10, 10, 12, 0.55) 55%, rgba(10, 10, 12, 0.95) 100%),
+    url("../assets/img/live-photo.png") center 28% / cover no-repeat;
+  padding: 4rem 1.5rem;
+}
+
+.hero__eyebrow {
+  font-family: var(--font-display);
+  letter-spacing: 0.4em;
+  font-size: 0.85rem;
+  color: var(--color-accent);
+  margin: 0 0 1rem;
+}
+
+.hero__title {
+  font-size: clamp(3.2rem, 12vw, 7rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  margin: 0 0 1rem;
+  text-shadow: 0 0 40px rgba(255, 45, 77, 0.35);
+}
+
+.hero__copy {
+  color: var(--color-text-dim);
+  margin: 0 0 2.5rem;
+  letter-spacing: 0.02em;
+}
+
+.hero__scroll {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 42px;
+  border: 1px solid var(--color-text-dim);
+  border-radius: 999px;
+}
+
+.hero__scroll span {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 4px;
+  height: 8px;
+  margin-left: -2px;
+  background: var(--color-accent);
+  border-radius: 999px;
+  animation: scrollDot 1.8s ease-in-out infinite;
+}
+
+@keyframes scrollDot {
+  0% { top: 8px; opacity: 1; }
+  70% { top: 22px; opacity: 0; }
+  100% { top: 22px; opacity: 0; }
+}
+
+/* ==========================================================
+   Section common
+   ========================================================== */
+.section {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 7rem 1.5rem;
+}
+
+.section--alt {
+  max-width: none;
+  background: var(--color-bg-alt);
+}
+
+.section--alt > * {
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section__title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.5rem;
+}
+
+.section__num {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--color-accent);
+  letter-spacing: 0.1em;
+}
+
+.section__lead {
+  color: var(--color-text-dim);
+  margin: 1.2rem 0 0;
+  max-width: 640px;
+}
+
+/* ==========================================================
+   Discography
+   ========================================================== */
+.discography {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+}
+
+.album__jacket {
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 4px;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.8);
+}
+
+.album__jacket img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.album__jacket:hover img {
+  transform: scale(1.06);
+  filter: brightness(1.05);
+}
+
+.album__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.album__meta {
+  color: var(--color-text-dim);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* ==========================================================
+   Live schedule
+   ========================================================== */
+.live-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--color-border);
+  margin-top: 2.5rem;
+}
+
+.live-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  background: var(--color-bg);
+  padding: 1.25rem 1.25rem;
+  transition: background 0.2s;
+}
+
+.live-item:hover {
+  background: var(--color-bg-alt);
+}
+
+.live-item__date {
+  min-width: 8em;
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+  color: var(--color-accent);
+  font-size: 1.1rem;
+}
+
+.live-item__venue {
+  flex: 1;
+}
+
+.live-item__link {
+  border-bottom: 1px solid currentColor;
+  font-size: 0.9rem;
+}
+
+/* ==========================================================
+   Footer
+   ========================================================== */
+.footer {
+  border-top: 1px solid var(--color-border);
+  padding: 2.5rem 1.5rem;
+}
+
+.footer__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--color-text-dim);
+  font-size: 0.85rem;
+}
+
+.footer__sns {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer__sns a {
+  transition: color 0.2s;
+}
+
+.footer__sns a:hover {
+  color: var(--color-accent);
+}
+
+/* ==========================================================
+   Responsive
+   ========================================================== */
+@media (max-width: 720px) {
+  .nav-toggle {
+    display: flex;
+  }
+
+  .nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    padding: 1rem 1.5rem;
+    gap: 1rem;
+    display: none;
+  }
+
+  .nav.is-open {
+    display: flex;
+  }
+
+  .section {
+    padding: 5rem 1.5rem;
+  }
+}
