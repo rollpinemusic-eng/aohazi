@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rollpinemusic-eng.github.io/aohazi/sitemap.xml

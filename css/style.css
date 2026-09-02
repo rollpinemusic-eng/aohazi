@@ -197,7 +197,7 @@ ul {
   text-align: center;
   background:
     linear-gradient(180deg, rgba(10, 10, 12, 0.35) 0%, rgba(10, 10, 12, 0.55) 55%, rgba(10, 10, 12, 0.95) 100%),
-    url("../assets/img/live-photo.png") center 28% / cover no-repeat;
+    url("../assets/img/hero-photo-optimized.jpg") center 28% / cover no-repeat;
   padding: 4rem 1.5rem;
 }
 
