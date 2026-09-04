@@ -23,6 +23,7 @@
 <body>
 
 <div id="intro" class="intro" aria-hidden="true">
+  <div class="intro__portrait"></div>
   <span class="intro__title" data-text="アオハジ">アオハジ</span>
 </div>
 
@@ -68,9 +69,8 @@
     <h2 class="section__title reveal"><span class="section__num">01</span>Profile</h2>
     <!--
       エンドロール風プロフィール演出(プロフィールセクションのメインコンテンツ)。
-      .credits__content を2つ複製して並べ、translateY(0 → -50%) の
-      ループで継ぎ目のない無限スクロールにしている(JS不要)。
-      内容を編集する場合は2つのブロックを必ず同じ内容にすること。
+      縦位置は main.js が Web Animations API で計算・制御している
+      (下から登場 → 上へ完全に抜ける → 数秒の間を置いて再登場)。
     -->
     <div class="credits reveal" aria-hidden="true">
       <div class="credits__logo"></div>
@@ -78,19 +78,6 @@
       <div class="credits__viewport">
         <div class="credits__track">
           <div class="credits__content">
-            <p>2017年、中学の同級生で結成。<br>幾度のメンバーチェンジを経て、2025年より現在のメンバーで活動。</p>
-            <p>メインはパンクサウンド。<br>ラップを取り入れたミクスチャーや失恋バラードなど、ジャンルに縛られない楽曲で独自のロックを追求している。</p>
-            <p>これまでに300本以上のライブを経験。<br>三重県や愛知など東海地方を拠点とし全国で活動中。</p>
-            <p>アオハジがライブで大切にしているのは、会場の温度感。</p>
-            <p>ステージに立った瞬間、普段とは別人のように変わる。<br>その温度差も、アオハジの武器のひとつ。</p>
-            <p>聴く人に感じ方を押し付けるつもりはない。<br>何を感じるかは、聴いた人に委ねたい。</p>
-            <p>だから、まだアオハジを知らない人には</p>
-            <p class="credits__emphasis">とりあえず、聴いてほしい。</p>
-            <p>現在6曲を各種サブスクリプションサービスで配信中。<br>今後も楽曲を随時リリースしていく。</p>
-            <p>自分たちが信じるロックを、もっと広く。<br>もっと遠くへ。</p>
-            <p class="credits__emphasis">アオハジは、もっといろんな意味でデカくなる。</p>
-          </div>
-          <div class="credits__content" aria-hidden="true">
             <p>2017年、中学の同級生で結成。<br>幾度のメンバーチェンジを経て、2025年より現在のメンバーで活動。</p>
             <p>メインはパンクサウンド。<br>ラップを取り入れたミクスチャーや失恋バラードなど、ジャンルに縛られない楽曲で独自のロックを追求している。</p>
             <p>これまでに300本以上のライブを経験。<br>三重県や愛知など東海地方を拠点とし全国で活動中。</p>

@@ -110,6 +110,12 @@ ul {
 /* ==========================================================
    Opening intro
    ========================================================== */
+/*
+  「ゆうとが登場 → 口元から『アオハジ』の文字が飛び出す」演出。
+  実写(既存のライブ写真からのトリミング)+タイポグラフィのバーストで、
+  少しユーモラスだが安っぽくならないよう、動きはシャープに短くまとめている。
+  合計は約2秒。PROFILEのエンドロールとは完全に独立したアニメーション。
+*/
 .intro {
   position: fixed;
   inset: 0;
@@ -119,40 +125,73 @@ ul {
   justify-content: center;
   overflow: hidden;
   background: var(--color-bg);
-  animation: introFadeOut 0.4s ease forwards;
-  animation-delay: 1.3s;
+  animation: introFadeOut 0.45s ease forwards;
+  animation-delay: 1.55s;
 }
 
 body.intro-active {
   overflow: hidden;
 }
 
-/* 背景にほのかな赤いグロー(照明が当たる瞬間のような重厚感を出す) */
+/* 文字が飛び出す瞬間に一度だけ光が弾けるフラッシュ(舞台照明が当たるイメージ) */
 .intro::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(255, 45, 77, 0.22) 0%, rgba(10, 10, 12, 0) 62%);
+  background: radial-gradient(circle at 50% 58%, rgba(255, 45, 77, 0.4) 0%, rgba(10, 10, 12, 0) 55%);
   opacity: 0;
-  animation: introGlow 1s ease 0.1s forwards;
+  animation: introFlash 0.35s ease 0.5s forwards;
+}
+
+.intro__portrait {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(60vw, 380px);
+  aspect-ratio: 1 / 1;
+  border-radius: 14px;
+  background-image: url("../assets/img/intro-yuto.jpg");
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 30px 70px -18px rgba(0, 0, 0, 0.85);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.72) rotate(-3deg);
+  animation:
+    introPortraitIn 0.3s cubic-bezier(0.22, 0.9, 0.32, 1) 0.05s forwards,
+    introPortraitOut 0.3s ease 0.85s forwards;
+}
+
+@keyframes introPortraitIn {
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes introPortraitOut {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.08) rotate(0deg);
+  }
 }
 
 /*
-  グリッチではなく「ピントが合う」ような演出。
-  ブラー+拡大からシャープな等倍へ収束させ、映画のタイトルロゴが
-  浮かび上がる瞬間を意識した、重厚感のある入り方にしている。
+  口元(写真の中心よりやや下)を起点に、文字が小さく飛び出して
+  一気に画面いっぱいへ広がる「バースト」で表示する。
 */
 .intro__title {
   position: relative;
+  z-index: 2;
   display: inline-block;
   font-size: clamp(2.75rem, 16vw, 6rem);
   font-weight: 900;
   color: var(--color-text);
-  text-shadow: 0 0 50px rgba(255, 45, 77, 0.45);
+  text-shadow: 0 0 50px rgba(255, 45, 77, 0.5);
   opacity: 0;
-  filter: blur(14px);
-  transform: scale(1.18);
-  animation: introFocus 0.75s cubic-bezier(0.19, 0.86, 0.28, 1) 0.1s forwards;
+  transform-origin: 50% 80%;
+  transform: scale(0.12) translateY(6%);
+  filter: blur(3px);
+  animation: introBurst 0.4s cubic-bezier(0.32, 1.5, 0.4, 1) 0.52s forwards;
 }
 
 .intro__title::after {
@@ -164,27 +203,24 @@ body.intro-active {
   height: 2px;
   background: var(--color-accent);
   transform: translateX(-50%);
-  animation: introLineDraw 0.5s ease 0.6s forwards;
+  animation: introLineDraw 0.4s ease 0.95s forwards;
 }
 
-@keyframes introFocus {
+@keyframes introBurst {
   0% {
     opacity: 0;
-    filter: blur(14px);
-    transform: scale(1.18);
-    letter-spacing: 0.3em;
+    transform: scale(0.12) translateY(6%);
+    filter: blur(3px);
   }
   65% {
     opacity: 1;
+    transform: scale(1.08) translateY(0);
     filter: blur(0);
-    transform: scale(1);
-    letter-spacing: 0.1em;
   }
   100% {
     opacity: 1;
+    transform: scale(1) translateY(0);
     filter: blur(0);
-    transform: scale(1);
-    letter-spacing: 0.1em;
   }
 }
 
@@ -192,10 +228,10 @@ body.intro-active {
   to { width: 42%; }
 }
 
-@keyframes introGlow {
+@keyframes introFlash {
   0% { opacity: 0; }
-  55% { opacity: 1; }
-  100% { opacity: 0.35; }
+  45% { opacity: 1; }
+  100% { opacity: 0.2; }
 }
 
 @keyframes introFadeOut {
@@ -204,6 +240,12 @@ body.intro-active {
     visibility: hidden;
     pointer-events: none;
     transform: scale(1.02);
+  }
+}
+
+@media (max-width: 480px) {
+  .intro__title {
+    transform-origin: 50% 74%;
   }
 }
 
@@ -216,6 +258,7 @@ body.intro-active {
   }
 
   .intro::before,
+  .intro__portrait,
   .intro__title,
   .intro__title::after {
     animation: none;
@@ -497,15 +540,18 @@ body.intro-active {
   background: var(--color-bg);
 }
 
-/* ロゴは常時固定表示・スクロールしない背景ウォーターマーク。存在感は残しつつ暗めに */
+/*
+  ロゴは常時固定表示・スクロールしない背景ウォーターマーク。
+  contain + inset で必ず全体が収まるようにし、縦横比も崩さない。
+*/
 .credits__logo {
   position: absolute;
-  inset: 0;
+  inset: 8%;
   background-image: url("../assets/img/logo-mark.jpg");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 88%;
-  opacity: 0.22;
+  background-size: contain;
+  opacity: 0.25;
   filter: brightness(0.85) saturate(1.05);
 }
 
@@ -525,23 +571,17 @@ body.intro-active {
 }
 
 /*
-  .credits__content を2つ複製して縦に並べ、自身の高さ基準で
-  0% → -50% だけ動かすことで、継ぎ目のない無限ループになる。
-  再生は既定で一時停止しておき、.credits.is-playing が付いた時だけ動く
-  (main.js の IntersectionObserver が PROFILE の表示を検知して付与する)。
+  縦位置は main.js が Web Animations API で直接制御する
+  (下から登場 → 上へ完全に抜ける → 数秒の間 → 再登場、を
+  実際の高さから計算して継ぎ目のない自然なループにするため)。
+  ここでは初期状態(JS未実行時のフォールバック)だけ定義する。
 */
 .credits__track {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  animation: creditsScroll 70s linear infinite;
-  animation-play-state: paused;
   will-change: transform;
-}
-
-.credits.is-playing .credits__track {
-  animation-play-state: running;
 }
 
 .credits__content {
@@ -566,25 +606,9 @@ body.intro-active {
   color: #fff;
 }
 
-@keyframes creditsScroll {
-  from { transform: translateY(0); }
-  to { transform: translateY(-50%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .credits__track,
-  .credits.is-playing .credits__track {
-    animation-play-state: paused;
-  }
-}
-
 @media (max-width: 600px) {
   .credits {
     max-height: 260px;
-  }
-
-  .credits__logo {
-    background-size: 150%;
   }
 
   .credits__content {
@@ -600,10 +624,6 @@ body.intro-active {
   .credits__viewport {
     mask-image: linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%);
-  }
-
-  .credits__track {
-    animation-duration: 55s;
   }
 }
 
