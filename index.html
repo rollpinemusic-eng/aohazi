@@ -17,13 +17,20 @@
 <meta name="twitter:site" content="@aohazi69">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700;900&family=Shippori+Mincho:wght@500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <div id="intro" class="intro" aria-hidden="true">
   <span class="intro__glitch" data-text="アオハジ">アオハジ</span>
+</div>
+
+<!-- 右からスライドインするページパネル。中身はJSが各セクションを複製して差し込む -->
+<div id="sidePanelBackdrop" class="side-panel-backdrop"></div>
+<div id="sidePanel" class="side-panel" aria-hidden="true">
+  <button id="sidePanelClose" class="side-panel__close" aria-label="閉じる">&times;</button>
+  <div id="sidePanelBody" class="side-panel__body"></div>
 </div>
 
 <header class="header">
@@ -33,10 +40,13 @@
       <span></span><span></span><span></span>
     </button>
     <nav class="nav" id="nav">
-      <a href="#profile"><span class="nav-en">Profile</span><span class="nav-ja">プロフィール</span></a>
-      <a href="#discography"><span class="nav-en">Discography</span><span class="nav-ja">音源</span></a>
-      <a href="#live"><span class="nav-en">Live</span><span class="nav-ja">ライブ</span></a>
-      <a href="#contact"><span class="nav-en">Contact</span><span class="nav-ja">お問い合わせ</span></a>
+      <a href="#top" id="navHome"><span class="nav-en">Home</span><span class="nav-ja">ホーム</span></a>
+      <a href="#profile" data-panel><span class="nav-en">Profile</span><span class="nav-ja">プロフィール</span></a>
+      <a href="#discography" data-panel><span class="nav-en">Music</span><span class="nav-ja">音源</span></a>
+      <a href="#live" data-panel><span class="nav-en">Live</span><span class="nav-ja">ライブ</span></a>
+      <a href="#video" data-panel><span class="nav-en">Video</span><span class="nav-ja">映像</span></a>
+      <a href="#contact" data-panel><span class="nav-en">Contact</span><span class="nav-ja">お問い合わせ</span></a>
+      <a href="#label" data-panel><span class="nav-en">For Label / Media</span><span class="nav-ja">関係者の方へ</span></a>
     </nav>
   </div>
 </header>
@@ -57,13 +67,8 @@
   <!-- Profile -->
   <section id="profile" class="section">
     <h2 class="section__title reveal"><span class="section__num">01</span>Profile</h2>
-    <p class="section__lead reveal">
-      2017年結成。三重県・愛知県を拠点に活動する3ピースバンド。<br>
-      2025年より新体制で始動。ダイレクトに言葉を届けることを信条に、
-      パンクサウンドとキャッチーなメロディーを鳴らし続けている。
-    </p>
     <!--
-      エンドロール風プロフィール演出。
+      エンドロール風プロフィール演出(プロフィールセクションのメインコンテンツ)。
       .credits__content を2つ複製して並べ、translateY(0 → -50%) の
       ループで継ぎ目のない無限スクロールにしている(JS不要)。
       内容を編集する場合は2つのブロックを必ず同じ内容にすること。
@@ -111,9 +116,9 @@
     </p>
   </section>
 
-  <!-- Discography -->
+  <!-- Music (Discography) -->
   <section id="discography" class="section section--alt">
-    <h2 class="section__title reveal"><span class="section__num">02</span>Discography</h2>
+    <h2 class="section__title reveal"><span class="section__num">02</span>Music</h2>
     <div class="discography">
       <article class="album reveal">
         <a href="https://music.apple.com/jp/artist/%E3%82%A2%E3%82%AA%E3%83%8F%E3%82%B8/1511082712" target="_blank" rel="noopener" class="album__jacket">
@@ -166,13 +171,32 @@
     </p>
   </section>
 
+  <!-- Video -->
+  <section id="video" class="section">
+    <h2 class="section__title reveal"><span class="section__num">04</span>Video</h2>
+    <p class="section__lead reveal">ライブ映像・MVはYouTubeチャンネルで公開中。今後も随時アップしていきます。</p>
+    <p class="reveal" style="margin-top:2rem;">
+      <a href="https://youtube.com/channel/UCKrWonMPDVpsNL0992XMXnA" class="btn btn--primary" target="_blank" rel="noopener">YouTubeチャンネルを見る</a>
+    </p>
+  </section>
+
   <!-- Contact -->
   <section id="contact" class="section section--alt">
-    <h2 class="section__title reveal"><span class="section__num">04</span>Contact</h2>
+    <h2 class="section__title reveal"><span class="section__num">05</span>Contact</h2>
     <p class="section__lead reveal">お仕事のご依頼・お問い合わせはInstagramまたはXのDMからお願いします。</p>
     <div class="reveal" style="display:flex; gap:1rem; flex-wrap:wrap;">
       <a href="https://www.instagram.com/aohazi69" class="btn btn--primary" target="_blank" rel="noopener">InstagramでDMを送る</a>
       <a href="https://x.com/aohazi69" class="btn" target="_blank" rel="noopener">XでDMを送る</a>
+    </div>
+  </section>
+
+  <!-- For Label / Media -->
+  <section id="label" class="section section--alt">
+    <h2 class="section__title reveal"><span class="section__num">06</span>For Label / Media</h2>
+    <p class="section__lead reveal">取材・レーベル関連のお問い合わせはこちらから。InstagramまたはXのDM、またはレーベル公式サイトからご連絡ください。</p>
+    <div class="reveal" style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:1.5rem;">
+      <a href="https://www.instagram.com/aohazi69" class="btn btn--primary" target="_blank" rel="noopener">InstagramでDMを送る</a>
+      <a href="https://rollpinemusic.crayonsite.com" class="btn" target="_blank" rel="noopener">レーベルサイトを見る</a>
     </div>
   </section>
 
