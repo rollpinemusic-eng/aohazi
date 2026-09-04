@@ -21,16 +21,6 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<script>
-  // 2回目以降の訪問ではオープニング演出をスキップする
-  (function () {
-    try {
-      if (localStorage.getItem('aohaziIntroSeen')) {
-        document.documentElement.classList.add('intro-skip');
-      }
-    } catch (e) {}
-  })();
-</script>
 
 <div id="intro" class="intro" aria-hidden="true">
   <span class="intro__glitch" data-text="アオハジ">アオハジ</span>
@@ -43,10 +33,10 @@
       <span></span><span></span><span></span>
     </button>
     <nav class="nav" id="nav">
-      <a href="#profile">Profile</a>
-      <a href="#discography">Discography</a>
-      <a href="#live">Live</a>
-      <a href="#contact">Contact</a>
+      <a href="#profile"><span class="nav-en">Profile</span><span class="nav-ja">プロフィール</span></a>
+      <a href="#discography"><span class="nav-en">Discography</span><span class="nav-ja">音源</span></a>
+      <a href="#live"><span class="nav-en">Live</span><span class="nav-ja">ライブ</span></a>
+      <a href="#contact"><span class="nav-en">Contact</span><span class="nav-ja">お問い合わせ</span></a>
     </nav>
   </div>
 </header>
@@ -72,6 +62,50 @@
       2025年より新体制で始動。ダイレクトに言葉を届けることを信条に、
       パンクサウンドとキャッチーなメロディーを鳴らし続けている。
     </p>
+    <!--
+      エンドロール風プロフィール演出。
+      .credits__content を2つ複製して並べ、translateY(0 → -50%) の
+      ループで継ぎ目のない無限スクロールにしている(JS不要)。
+      内容を編集する場合は2つのブロックを必ず同じ内容にすること。
+    -->
+    <div class="credits reveal" aria-hidden="true">
+      <div class="credits__logo"></div>
+      <div class="credits__scrim"></div>
+      <div class="credits__viewport">
+        <div class="credits__track">
+          <div class="credits__content">
+            <p>2017年、中学の同級生で結成。<br>幾度のメンバーチェンジを経て、2025年より現在のメンバーで活動。</p>
+            <p>メインはパンクサウンド。<br>ラップを取り入れたミクスチャーや失恋バラードなど、ジャンルに縛られない楽曲で独自のロックを追求している。</p>
+            <p>これまでに300本以上のライブを経験。<br>三重県や愛知など東海地方を拠点とし全国で活動中。</p>
+            <p>アオハジがライブで大切にしているのは、会場の温度感。</p>
+            <p>ステージに立った瞬間、普段とは別人のように変わる。<br>その温度差も、アオハジの武器のひとつ。</p>
+            <p>聴く人に感じ方を押し付けるつもりはない。<br>何を感じるかは、聴いた人に委ねたい。</p>
+            <p>だから、まだアオハジを知らない人には</p>
+            <p class="credits__emphasis">とりあえず、聴いてほしい。</p>
+            <p>現在6曲を各種サブスクリプションサービスで配信中。<br>今後も楽曲を随時リリースしていく。</p>
+            <p>自分たちが信じるロックを、もっと広く。<br>もっと遠くへ。</p>
+            <p class="credits__emphasis">アオハジは、もっといろんな意味でデカくなる。</p>
+          </div>
+          <div class="credits__content" aria-hidden="true">
+            <p>2017年、中学の同級生で結成。<br>幾度のメンバーチェンジを経て、2025年より現在のメンバーで活動。</p>
+            <p>メインはパンクサウンド。<br>ラップを取り入れたミクスチャーや失恋バラードなど、ジャンルに縛られない楽曲で独自のロックを追求している。</p>
+            <p>これまでに300本以上のライブを経験。<br>三重県や愛知など東海地方を拠点とし全国で活動中。</p>
+            <p>アオハジがライブで大切にしているのは、会場の温度感。</p>
+            <p>ステージに立った瞬間、普段とは別人のように変わる。<br>その温度差も、アオハジの武器のひとつ。</p>
+            <p>聴く人に感じ方を押し付けるつもりはない。<br>何を感じるかは、聴いた人に委ねたい。</p>
+            <p>だから、まだアオハジを知らない人には</p>
+            <p class="credits__emphasis">とりあえず、聴いてほしい。</p>
+            <p>現在6曲を各種サブスクリプションサービスで配信中。<br>今後も楽曲を随時リリースしていく。</p>
+            <p>自分たちが信じるロックを、もっと広く。<br>もっと遠くへ。</p>
+            <p class="credits__emphasis">アオハジは、もっといろんな意味でデカくなる。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="reveal" style="margin-top:1.5rem; text-align:center;">
+      <a href="profile/" class="btn btn--primary">全文を読む &rarr;</a>
+    </p>
+
     <p class="reveal" style="margin-top:1.5rem;">
       <a href="https://ise-barret.jp/SMS.aohazi.html" target="_blank" rel="noopener" class="text-link">インタビュー記事を読む &rarr;</a>
     </p>

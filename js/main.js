@@ -1,27 +1,21 @@
-// オープニング演出(初回訪問時のみ再生し、以降はスキップする)
+// オープニング演出(訪問・リロードのたびに毎回再生する)
 document.addEventListener('DOMContentLoaded', () => {
   const intro = document.getElementById('intro');
-  const alreadySkipped = document.documentElement.classList.contains('intro-skip');
+  if (!intro) return;
+
   const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (intro) {
-    if (alreadySkipped || reducedMotion) {
-      intro.hidden = true;
-      try {
-        localStorage.setItem('aohaziIntroSeen', '1');
-      } catch (e) {}
-    } else {
-      document.body.classList.add('intro-active');
-      intro.addEventListener('animationend', (event) => {
-        if (event.target !== intro) return;
-        intro.hidden = true;
-        document.body.classList.remove('intro-active');
-        try {
-          localStorage.setItem('aohaziIntroSeen', '1');
-        } catch (e) {}
-      });
-    }
+  if (reducedMotion) {
+    intro.hidden = true;
+    return;
   }
+
+  document.body.classList.add('intro-active');
+  intro.addEventListener('animationend', (event) => {
+    if (event.target !== intro) return;
+    intro.hidden = true;
+    document.body.classList.remove('intro-active');
+  });
 });
 
 // モバイルナビゲーションの開閉

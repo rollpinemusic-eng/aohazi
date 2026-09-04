@@ -118,12 +118,8 @@ ul {
   align-items: center;
   justify-content: center;
   background: var(--color-bg);
-  animation: introFadeOut 0.6s ease forwards;
-  animation-delay: 2.1s;
-}
-
-.intro-skip .intro {
-  display: none;
+  animation: introFadeOut 0.4s ease forwards;
+  animation-delay: 1.3s;
 }
 
 body.intro-active {
@@ -139,8 +135,8 @@ body.intro-active {
   color: var(--color-text);
   opacity: 0;
   animation:
-    introTextIn 0.5s ease 0.15s forwards,
-    introGlitchShake 0.5s steps(1, end) 0.6s 2;
+    introTextIn 0.35s ease 0.05s forwards,
+    introGlitchShake 0.4s steps(1, end) 0.4s 1;
 }
 
 .intro__glitch::before,
@@ -155,12 +151,12 @@ body.intro-active {
 
 .intro__glitch::before {
   color: #2de2ff;
-  animation: introGlitchBefore 0.5s steps(1, end) 0.6s 2;
+  animation: introGlitchBefore 0.4s steps(1, end) 0.4s 1;
 }
 
 .intro__glitch::after {
   color: var(--color-accent);
-  animation: introGlitchAfter 0.5s steps(1, end) 0.6s 2;
+  animation: introGlitchAfter 0.4s steps(1, end) 0.4s 1;
 }
 
 @keyframes introTextIn {
@@ -242,11 +238,26 @@ body.intro-active {
 
 .nav a {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-size: 0.85rem;
   letter-spacing: 0.08em;
   color: var(--color-text-dim);
   transition: color 0.2s;
   padding-bottom: 0.3em;
+}
+
+.nav-en {
+  line-height: 1.2;
+}
+
+.nav-ja {
+  margin-top: 0.2em;
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-dim);
+  opacity: 0.75;
 }
 
 .nav a::after {
@@ -439,6 +450,114 @@ body.intro-active {
   color: var(--color-text-dim);
   margin: 1.2rem 0 0;
   max-width: 640px;
+}
+
+/* ==========================================================
+   Profile — end roll credits
+   ========================================================== */
+.credits {
+  position: relative;
+  margin-top: 3rem;
+  aspect-ratio: 16 / 9;
+  max-height: 440px;
+  min-height: 260px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.85);
+}
+
+/* ロゴは常時固定表示・スクロールしない背景ウォーターマーク */
+.credits__logo {
+  position: absolute;
+  inset: 0;
+  background-image: url("../assets/img/logo-mark.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 58%;
+  opacity: 0.16;
+}
+
+.credits__scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(10, 10, 12, 0.35) 0%, rgba(10, 10, 12, 0.8) 100%);
+}
+
+.credits__viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 84%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 84%, transparent 100%);
+}
+
+/*
+  .credits__content を2つ複製して縦に並べ、自身の高さ基準で
+  0% → -50% だけ動かすことで、継ぎ目のない無限ループになる。
+*/
+.credits__track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  animation: creditsScroll 60s linear infinite;
+  will-change: transform;
+}
+
+.credits__content {
+  padding: 2.5rem 1.75rem;
+  text-align: center;
+}
+
+.credits__content p {
+  margin: 0 0 1.5em;
+  font-size: 0.95rem;
+  line-height: 1.9;
+  color: rgba(244, 244, 245, 0.95);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+.credits__content .credits__emphasis {
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #fff;
+}
+
+@keyframes creditsScroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .credits__track {
+    animation-play-state: paused;
+  }
+}
+
+@media (max-width: 600px) {
+  .credits {
+    aspect-ratio: 3 / 4;
+    max-height: 380px;
+  }
+
+  .credits__logo {
+    background-size: 78%;
+  }
+
+  .credits__content {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .credits__content p {
+    font-size: 0.85rem;
+    line-height: 1.8;
+  }
+
+  .credits__track {
+    animation-duration: 42s;
+  }
 }
 
 /* ==========================================================
@@ -650,6 +769,76 @@ body.intro-active {
 
 .footer__sns a:hover {
   color: var(--color-accent);
+}
+
+/* ==========================================================
+   Profile page (/profile/)
+   ========================================================== */
+.page-hero {
+  position: relative;
+  min-height: 36vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+  padding: 6rem 1.5rem 3rem;
+  overflow: hidden;
+}
+
+.page-hero__logo {
+  position: absolute;
+  inset: 0;
+  background-image: url("../assets/img/logo-mark.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 68%;
+  opacity: 0.18;
+}
+
+.page-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(10, 10, 12, 0.25) 0%, rgba(10, 10, 12, 0.94) 100%);
+}
+
+.page-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.page-hero__title {
+  font-size: clamp(2rem, 7vw, 3rem);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.article {
+  max-width: 640px;
+}
+
+.article p {
+  margin: 0 0 1.6em;
+  font-size: 1rem;
+  line-height: 2;
+  color: var(--color-text-dim);
+}
+
+.article__emphasis {
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.article__nav {
+  margin-top: 3rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 /* ==========================================================
