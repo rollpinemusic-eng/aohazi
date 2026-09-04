@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // パネル内では常に表示済み状態にする(スクロール連動のフェードイン対象外のため)
     clone.classList.add('is-visible');
     clone.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
+    // パネルで直接Profileを開いた場合、本編を未スクロールでもエンドロールを再生させる
+    clone.querySelectorAll('.credits').forEach((el) => el.classList.add('is-playing'));
 
     body.innerHTML = '';
     body.appendChild(clone);
@@ -100,6 +102,23 @@ document.addEventListener('DOMContentLoaded', () => {
       navToggle.setAttribute('aria-expanded', 'false');
     });
   });
+
+  // PROFILEのエンドロールは、セクションが画面内に入った瞬間から再生を開始する
+  const credits = document.querySelector('.credits');
+  const reducedMotionCredits = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (credits && !reducedMotionCredits && 'IntersectionObserver' in window) {
+    const creditsObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          credits.classList.add('is-playing');
+          creditsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    creditsObserver.observe(credits);
+  }
 
   // スクロールで要素をフェードインさせる
   const revealTargets = document.querySelectorAll('.reveal');
