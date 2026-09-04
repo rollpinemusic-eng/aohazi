@@ -21,6 +21,20 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<script>
+  // 2回目以降の訪問ではオープニング演出をスキップする
+  (function () {
+    try {
+      if (localStorage.getItem('aohaziIntroSeen')) {
+        document.documentElement.classList.add('intro-skip');
+      }
+    } catch (e) {}
+  })();
+</script>
+
+<div id="intro" class="intro" aria-hidden="true">
+  <span class="intro__glitch" data-text="アオハジ">アオハジ</span>
+</div>
 
 <header class="header">
   <div class="header__inner">
@@ -41,10 +55,10 @@
 
   <!-- Hero -->
   <section class="hero">
+    <div class="hero__photo" role="img" aria-label="ライブで演奏するアオハジ"></div>
     <div class="hero__inner reveal">
       <p class="hero__eyebrow">OFFICIAL SITE</p>
       <h1 class="hero__title">アオハジ</h1>
-      <p class="hero__copy">三重・愛知を拠点に活動する3ピースバンド</p>
       <a href="#live" class="btn btn--primary">最新のライブ情報</a>
     </div>
     <a href="#profile" class="hero__scroll" aria-label="スクロールして次へ"><span></span></a>
@@ -90,8 +104,30 @@
   <!-- Live -->
   <section id="live" class="section">
     <h2 class="section__title reveal"><span class="section__num">03</span>Live Schedule</h2>
-    <p class="section__lead reveal">現在、次回ライブの詳細を調整中です。決定次第こちらでお知らせします。</p>
-    <p class="reveal" style="margin-top:2rem;">
+    <ul class="live-list">
+      <li class="live-card reveal">
+        <div class="live-card__date">
+          <span class="live-card__month">09</span>
+          <span class="live-card__day">12</span>
+          <span class="live-card__sub">2026 SAT</span>
+        </div>
+        <div class="live-card__body">
+          <p class="live-card__tour">THE RAPID ぱくぱくもぐもぐむしゃむしゃツアー2026 伊勢編</p>
+          <p class="live-card__venue">
+            <a href="https://ise-barret.jp/" target="_blank" rel="noopener">LIVE SPACE BARRET</a>
+            <span class="live-card__addr">三重県伊勢市曽祢1丁目15-4</span>
+          </p>
+          <p class="live-card__lineup">
+            THE RAPID / FilterNote / ブレーメン / <strong>アオハジ</strong> / トリオトリオ / ナカキターズ
+          </p>
+          <div class="live-card__meta">
+            <span>OPEN 17:00 / START 17:30</span>
+            <span>CHARGE 2,000円 + 500円(1DRINK)</span>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <p class="reveal" style="margin-top:2.5rem;">
       <a href="https://youtube.com/channel/UCKrWonMPDVpsNL0992XMXnA" class="btn" target="_blank" rel="noopener">YouTubeでライブ映像を見る</a>
     </p>
   </section>

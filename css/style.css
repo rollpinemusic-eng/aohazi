@@ -108,6 +108,107 @@ ul {
 }
 
 /* ==========================================================
+   Opening intro
+   ========================================================== */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  animation: introFadeOut 0.6s ease forwards;
+  animation-delay: 2.1s;
+}
+
+.intro-skip .intro {
+  display: none;
+}
+
+body.intro-active {
+  overflow: hidden;
+}
+
+.intro__glitch {
+  position: relative;
+  display: inline-block;
+  font-size: clamp(2.75rem, 16vw, 6rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--color-text);
+  opacity: 0;
+  animation:
+    introTextIn 0.5s ease 0.15s forwards,
+    introGlitchShake 0.5s steps(1, end) 0.6s 2;
+}
+
+.intro__glitch::before,
+.intro__glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  opacity: 0;
+}
+
+.intro__glitch::before {
+  color: #2de2ff;
+  animation: introGlitchBefore 0.5s steps(1, end) 0.6s 2;
+}
+
+.intro__glitch::after {
+  color: var(--color-accent);
+  animation: introGlitchAfter 0.5s steps(1, end) 0.6s 2;
+}
+
+@keyframes introTextIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes introGlitchShake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-1px, 1px); }
+  40% { transform: translate(1px, -1px); }
+  60% { transform: translate(-1px, 0); }
+}
+
+@keyframes introGlitchBefore {
+  0%, 100% { opacity: 0; clip-path: inset(0 0 0 0); transform: translate(0, 0); }
+  20% { opacity: 0.7; clip-path: inset(10% 0 60% 0); transform: translate(-3px, 1px); }
+  40% { opacity: 0.5; clip-path: inset(50% 0 10% 0); transform: translate(2px, -1px); }
+  60% { opacity: 0; }
+}
+
+@keyframes introGlitchAfter {
+  0%, 100% { opacity: 0; clip-path: inset(0 0 0 0); transform: translate(0, 0); }
+  25% { opacity: 0.7; clip-path: inset(60% 0 10% 0); transform: translate(3px, -1px); }
+  45% { opacity: 0.5; clip-path: inset(15% 0 55% 0); transform: translate(-2px, 1px); }
+  65% { opacity: 0; }
+}
+
+@keyframes introFadeOut {
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    animation: none;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .intro__glitch,
+  .intro__glitch::before,
+  .intro__glitch::after {
+    animation: none;
+  }
+}
+
+/* ==========================================================
    Header
    ========================================================== */
 .header {
@@ -190,15 +291,57 @@ ul {
    ========================================================== */
 .hero {
   position: relative;
-  min-height: 92vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: var(--color-bg);
   text-align: center;
-  background:
-    linear-gradient(180deg, rgba(10, 10, 12, 0.35) 0%, rgba(10, 10, 12, 0.55) 55%, rgba(10, 10, 12, 0.95) 100%),
-    url("../assets/img/hero-photo-optimized.jpg") center 28% / cover no-repeat;
-  padding: 4rem 1.5rem;
+}
+
+/*
+  写真部分は実際の画像比率(2046:1264)を aspect-ratio に指定しているため、
+  スマホ・タブレットでは cover でも切り抜きが発生せず、バンドの全身が写る。
+*/
+.hero__photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2046 / 1264;
+  background: url("../assets/img/hero-photo-optimized.jpg") center 32% / cover no-repeat;
+}
+
+.hero__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 10, 12, 0) 55%, rgba(10, 10, 12, 0.95) 100%);
+}
+
+.hero__inner {
+  position: relative;
+  padding: 2rem 1.5rem 3rem;
+}
+
+@media (min-width: 901px) {
+  .hero {
+    min-height: 92vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .hero__photo::after {
+    background: linear-gradient(180deg, rgba(10, 10, 12, 0.3) 0%, rgba(10, 10, 12, 0.5) 55%, rgba(10, 10, 12, 0.95) 100%);
+  }
+
+  .hero__inner {
+    z-index: 1;
+    padding: 4rem 1.5rem;
+  }
 }
 
 .hero__eyebrow {
@@ -210,28 +353,30 @@ ul {
 }
 
 .hero__title {
-  font-size: clamp(3.2rem, 12vw, 7rem);
+  font-size: clamp(2.75rem, 12vw, 7rem);
   font-weight: 900;
   letter-spacing: 0.08em;
-  margin: 0 0 1rem;
+  margin: 0 0 2rem;
   text-shadow: 0 0 40px rgba(255, 45, 77, 0.35);
-}
-
-.hero__copy {
-  color: var(--color-text-dim);
-  margin: 0 0 2.5rem;
-  letter-spacing: 0.02em;
+  text-wrap: balance;
 }
 
 .hero__scroll {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 26px;
-  height: 42px;
-  border: 1px solid var(--color-text-dim);
-  border-radius: 999px;
+  display: none;
+}
+
+@media (min-width: 901px) {
+  .hero__scroll {
+    display: block;
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 26px;
+    height: 42px;
+    border: 1px solid var(--color-text-dim);
+    border-radius: 999px;
+  }
 }
 
 .hero__scroll span {
@@ -276,10 +421,11 @@ ul {
   display: flex;
   align-items: baseline;
   gap: 0.8rem;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4.5vw, 2rem);
   font-weight: 900;
   letter-spacing: 0.05em;
   margin: 0 0 0.5rem;
+  text-wrap: balance;
 }
 
 .section__num {
@@ -344,40 +490,133 @@ ul {
 .live-list {
   display: flex;
   flex-direction: column;
-  gap: 1px;
-  background: var(--color-border);
+  gap: 1.25rem;
   margin-top: 2.5rem;
 }
 
-.live-item {
+.live-card {
+  display: flex;
+  gap: 1.5rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 1.75rem;
+  transition: border-color 0.25s, transform 0.25s;
+}
+
+.live-card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.live-card__date {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 5.5rem;
+  padding: 0.5rem 0;
+  border-right: 1px solid var(--color-border);
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  line-height: 1;
+}
+
+.live-card__month {
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+}
+
+.live-card__day {
+  font-size: 2.6rem;
+}
+
+.live-card__sub {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--color-text-dim);
+}
+
+.live-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.live-card__tour {
+  margin: 0 0 0.6rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-wrap: balance;
+}
+
+.live-card__venue {
+  margin: 0 0 0.8rem;
+  color: var(--color-text-dim);
+  font-size: 0.9rem;
+}
+
+.live-card__venue a {
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.live-card__venue a:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.live-card__addr {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+}
+
+.live-card__lineup {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  background: var(--color-bg-alt);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  line-height: 1.9;
+}
+
+.live-card__lineup strong {
+  color: var(--color-accent);
+}
+
+.live-card__meta {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
-  background: var(--color-bg);
-  padding: 1.25rem 1.25rem;
-  transition: background 0.2s;
+  gap: 0.5rem 1.5rem;
+  color: var(--color-text-dim);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
 }
 
-.live-item:hover {
-  background: var(--color-bg-alt);
-}
+@media (max-width: 560px) {
+  .live-card {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
 
-.live-item__date {
-  min-width: 8em;
-  font-family: var(--font-display);
-  letter-spacing: 0.05em;
-  color: var(--color-accent);
-  font-size: 1.1rem;
-}
+  .live-card__date {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.6rem;
+    width: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.85rem;
+  }
 
-.live-item__venue {
-  flex: 1;
-}
-
-.live-item__link {
-  border-bottom: 1px solid currentColor;
-  font-size: 0.9rem;
+  .live-card__day {
+    font-size: 1.6rem;
+  }
 }
 
 /* ==========================================================
@@ -440,5 +679,15 @@ ul {
 
   .section {
     padding: 5rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 3.75rem 1.25rem;
+  }
+
+  .header__inner {
+    padding: 0.9rem 1.25rem;
   }
 }
