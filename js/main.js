@@ -16,20 +16,28 @@ function initCredits(creditsEl, options) {
   const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reducedMotion) return null;
 
-  const SPEED = 42; // px/秒。映画のエンドロールくらいの速度
-  const PAUSE_MS = 3000; // 抜けきってから次が登場するまでの間
+  const SPEED = 34; // px/秒。映画のエンドロールを少し読みやすくした程度の速度
+  const PAUSE_MS = 1000; // 完全に消えてから次が始まるまでの間(約1秒)
+  const PEEK_PX = 46; // 開始時点で最初の一文の冒頭が少し見えている量
 
   const containerHeight = viewport.clientHeight;
   const contentHeight = content.getBoundingClientRect().height;
-  const startY = containerHeight; // 表示エリアの下、完全に見えない位置
+  const startY = Math.max(containerHeight - PEEK_PX, 0); // 冒頭が少し見えた状態から開始
   const endY = -contentHeight; // 表示エリアの上、完全に抜けきった位置
 
   const travelMs = ((startY - endY) / SPEED) * 1000;
   const totalMs = travelMs + PAUSE_MS;
   const travelOffset = travelMs / totalMs;
 
-  if (creditsEl._creditsAnim) {
-    creditsEl._creditsAnim.cancel();
+  // リサイズやフォント読み込み完了時の再計算で再生位置が飛ばないよう、
+  // 可能なら直前の再生位置(currentTime)を引き継ぐ。
+  const prevAnim = creditsEl._creditsAnim;
+  let preserveTime = null;
+  if (options.preserveTime && prevAnim) {
+    preserveTime = prevAnim.currentTime;
+  }
+  if (prevAnim) {
+    prevAnim.cancel();
   }
 
   const anim = track.animate(
@@ -46,6 +54,10 @@ function initCredits(creditsEl, options) {
   );
 
   creditsEl._creditsAnim = anim;
+
+  if (preserveTime != null) {
+    anim.currentTime = preserveTime;
+  }
 
   if (options.autoplay) {
     anim.play();
@@ -162,33 +174,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // PROFILEのエンドロールは、セクションが画面内に入った瞬間から再生を開始する
+  // PROFILEのエンドロールは、セクションが画面内に入った瞬間に一度だけ再生を開始する。
+  // 制御は常に credits._creditsAnim(その時点の最新のアニメーション)を参照して行い、
+  // 古い参照を掴んだままにしないことで「再計算のたびに勝手に再スタートする」事故を防ぐ。
   const credits = document.querySelector('.credits');
 
   if (credits) {
-    const anim = initCredits(credits);
+    initCredits(credits);
 
-    if (anim && 'IntersectionObserver' in window) {
+    const playCredits = () => {
+      if (credits._creditsAnim) credits._creditsAnim.play();
+    };
+
+    if ('IntersectionObserver' in window) {
+      let hasStarted = false;
       const creditsObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            anim.play();
+          if (entry.isIntersecting && !hasStarted) {
+            hasStarted = true;
+            playCredits();
             creditsObserver.unobserve(entry.target);
           }
         });
       }, { threshold: 0.3 });
 
       creditsObserver.observe(credits);
+    } else {
+      playCredits();
     }
 
-    // 画面サイズが変わったら実測し直す(向き変更・ウィンドウリサイズ対応)
+    // Webフォント読み込み完了後に実際の高さで再計測する
+    // (フォールバック書体で測った高さのまま動かすと、後から文字サイズが変わって
+    //  終了位置がずれ、途中で止まって見える原因になるため)
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        const wasPlaying = credits._creditsAnim && credits._creditsAnim.playState === 'running';
+        initCredits(credits, { autoplay: wasPlaying, preserveTime: true });
+      });
+    }
+
+    // 画面の「横幅」が変わった時だけ再計測する。
+    // スマホはスクロール中のアドレスバー開閉で高さだけ変化した resize が
+    // 頻繁に発生し、それをそのまま拾うと再生位置が毎回リセットされてしまうため。
+    let lastWidth = window.innerWidth;
     let resizeTimer;
     window.addEventListener('resize', () => {
+      if (window.innerWidth === lastWidth) return;
+      lastWidth = window.innerWidth;
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         const wasPlaying = credits._creditsAnim && credits._creditsAnim.playState === 'running';
-        initCredits(credits, { autoplay: wasPlaying });
-      }, 250);
+        initCredits(credits, { autoplay: wasPlaying, preserveTime: true });
+      }, 400);
     });
   }
 
