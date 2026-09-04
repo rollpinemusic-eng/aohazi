@@ -111,10 +111,12 @@ ul {
    Opening intro
    ========================================================== */
 /*
-  「ノイズで緊張感 → ゆうとの真顔 → 少しズーム → 口を開けて
+  「シネマティックな緊張感 → ゆうとの真顔 → 少しズーム → 口を開けて
   『アオハジ』が飛び出す」の2枚の実写をカットで繋ぐ演出。
   文字は写真側に描き込まれた素材(intro-yuto-shout.jpg)を使う。
-  合計は約2.3秒。PROFILEのエンドロールとは完全に独立したアニメーション。
+  レターボックス・光・スモーク・粒子で映画の予告編のような密度を出しつつ、
+  動きはすべて滑らかなイージングでつなぎ、カクつきや刻み感を避けている。
+  合計は約2.4秒。PROFILEのエンドロールとは完全に独立したアニメーション。
 */
 .intro {
   position: fixed;
@@ -124,13 +126,50 @@ ul {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: var(--color-bg);
-  animation: introFadeOut 0.45s ease forwards;
-  animation-delay: 1.85s;
+  background: #000;
+  animation: introFadeOut 0.5s ease forwards;
+  animation-delay: 1.95s;
 }
 
 body.intro-active {
   overflow: hidden;
+}
+
+/* シネマスコープ風のレターボックス。開いた瞬間から「映像作品」を感じさせる */
+.intro__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 9%;
+  background: #000;
+  z-index: 4;
+}
+
+.intro__bar--top {
+  top: 0;
+}
+
+.intro__bar--bottom {
+  bottom: 0;
+}
+
+/* ゆらめくスモーク。ステージの煙幕のような、ごく淡い光のにじみ */
+.intro__smoke {
+  position: absolute;
+  inset: -25%;
+  background:
+    radial-gradient(circle at 28% 68%, rgba(255, 255, 255, 0.07) 0%, transparent 42%),
+    radial-gradient(circle at 76% 58%, rgba(255, 45, 77, 0.08) 0%, transparent 38%),
+    radial-gradient(circle at 50% 85%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+  filter: blur(18px);
+  opacity: 0;
+  animation: introSmokeDrift 2.4s ease-out 0s forwards;
+}
+
+@keyframes introSmokeDrift {
+  0% { opacity: 0; transform: translate3d(0, 4%, 0) scale(1); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(3%, -6%, 0) scale(1.12); }
 }
 
 /* ざらついたノイズ(登場前の緊張感)。SVGのフラクタルノイズをデータURIで生成 */
@@ -140,14 +179,61 @@ body.intro-active {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
   mix-blend-mode: overlay;
   opacity: 0;
-  animation: introGrain 0.9s steps(6, end) 0s 1;
+  animation: introGrain 1s ease-in-out 0s 1;
+}
+
+@keyframes introGrain {
+  0% { opacity: 0; }
+  30% { opacity: 0.4; }
+  60% { opacity: 0.12; }
+  100% { opacity: 0; }
+}
+
+/* ステージライトが一筋、斜めに走り抜ける(カット直前の予告) */
+.intro__sweep {
+  position: absolute;
+  inset: -10%;
+  z-index: 2;
+  background: linear-gradient(100deg, transparent 42%, rgba(255, 255, 255, 0.55) 50%, transparent 58%);
+  opacity: 0;
+  transform: translateX(-70%);
+  animation: introSweep 0.55s cubic-bezier(0.3, 0, 0.2, 1) 0.55s forwards;
+}
+
+@keyframes introSweep {
+  0% { opacity: 0; transform: translateX(-70%); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(70%); }
+}
+
+/* 舞い上がる光の粒子。派手なパーティクル爆発ではなく、ごく淡いホコリ・光の粒 */
+.intro__particles {
+  position: absolute;
+  inset: -10%;
+  background-image:
+    radial-gradient(1.6px 1.6px at 18% 74%, rgba(255, 255, 255, 0.55) 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 34% 40%, rgba(255, 255, 255, 0.4) 50%, transparent 52%),
+    radial-gradient(1.8px 1.8px at 62% 66%, rgba(255, 210, 200, 0.5) 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 78% 30%, rgba(255, 255, 255, 0.35) 50%, transparent 52%),
+    radial-gradient(1.4px 1.4px at 50% 82%, rgba(255, 255, 255, 0.4) 50%, transparent 52%),
+    radial-gradient(1px 1px at 88% 55%, rgba(255, 255, 255, 0.3) 50%, transparent 52%);
+  opacity: 0;
+  transform: translateY(0);
+  animation: introParticles 1.4s ease-out 0.68s forwards;
+}
+
+@keyframes introParticles {
+  0% { opacity: 0; transform: translateY(4%); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-14%); }
 }
 
 /* 周辺をわずかに暗くするビネット(映像作品のタイトルらしい重み) */
 .intro__vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, rgba(10, 10, 12, 0) 45%, rgba(10, 10, 12, 0.75) 100%);
+  z-index: 3;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 42%, rgba(0, 0, 0, 0.8) 100%);
   pointer-events: none;
 }
 
@@ -158,10 +244,16 @@ body.intro-active {
   inset: 0;
   z-index: 1;
   background:
-    radial-gradient(circle at 44% 50%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 24%),
-    radial-gradient(circle at 44% 50%, rgba(255, 45, 77, 0.45) 0%, rgba(10, 10, 12, 0) 55%);
+    radial-gradient(circle at 40% 50%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 26%),
+    radial-gradient(circle at 40% 50%, rgba(255, 45, 77, 0.5) 0%, rgba(10, 10, 12, 0) 58%);
   opacity: 0;
-  animation: introFlash 0.4s ease 0.72s forwards;
+  animation: introFlash 0.45s ease-out 0.66s forwards;
+}
+
+@keyframes introFlash {
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  100% { opacity: 0.16; }
 }
 
 .intro__portrait {
@@ -170,77 +262,62 @@ body.intro-active {
   top: 50%;
   background-size: cover;
   background-position: center;
-  filter: grayscale(0.15) contrast(1.12) brightness(0.97);
+  filter: grayscale(0.12) contrast(1.14) brightness(0.98);
+  /*
+    輪郭を四角く縁取らせないための「縁だけ」フェード。
+    コア(内側70%)は完全不透明のまま保ち、外周のごく一部だけを
+    透明にすることで、被写体や(2枚目の)文字は一切削らずに
+    四角い縁の存在だけを消す。
+  */
+  mask-image: radial-gradient(ellipse 92% 88% at center, #000 0%, #000 70%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 92% 88% at center, #000 0%, #000 70%, transparent 100%);
 }
 
-/* 1枚目: 真顔。輪郭をフェードさせて背景の黒へ自然に溶け込ませる */
+/* 1枚目: 真顔。フォーカスが合うように滑らかにブラーが晴れていく */
 .intro__portrait--closed {
-  width: min(48vw, 300px);
+  width: min(50vw, 320px);
   aspect-ratio: 637 / 1024;
   background-image: url("../assets/img/intro-yuto-closed.jpg");
-  mask-image: radial-gradient(ellipse 60% 56% at 50% 42%, #000 58%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 60% 56% at 50% 42%, #000 58%, transparent 100%);
   opacity: 0;
-  clip-path: inset(0 0 100% 0);
-  transform: translate(-50%, -50%) scale(0.94);
+  filter: grayscale(0.12) contrast(1.14) brightness(0.98) blur(10px);
+  transform: translate(-50%, -50%) scale(1.08);
   animation:
-    introClosedReveal 0.3s steps(4, end) 0.18s forwards,
-    introClosedZoom 0.35s ease 0.48s forwards,
-    introClosedOut 0.1s ease 0.7s forwards;
+    introClosedReveal 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s forwards,
+    introClosedOut 0.16s ease-in 0.62s forwards;
 }
 
 /* 2枚目: 口を開けて「アオハジ」が飛び出す瞬間。写真に文字が描き込まれている */
 .intro__portrait--shout {
-  width: min(76vw, 560px);
+  width: min(78vw, 580px);
   aspect-ratio: 868 / 1024;
   background-image: url("../assets/img/intro-yuto-shout.jpg");
   background-position: 38% center;
-  mask-image: radial-gradient(ellipse 68% 62% at 32% 46%, #000 60%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 68% 62% at 32% 46%, #000 60%, transparent 100%);
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.86);
+  transform: translate(-50%, -50%) scale(0.88);
   animation:
-    introShoutIn 0.24s cubic-bezier(0.28, 1.55, 0.4, 1) 0.72s forwards,
-    introShoutSettle 0.35s ease 0.96s forwards;
+    introShoutIn 0.3s cubic-bezier(0.22, 1.4, 0.36, 1) 0.66s forwards,
+    introShoutSettle 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) 0.96s forwards;
 }
 
 @keyframes introClosedReveal {
-  0% { opacity: 0; clip-path: inset(0 0 100% 0); }
-  20% { opacity: 1; clip-path: inset(0 0 70% 0); }
-  55% { clip-path: inset(0 0 28% 0); }
-  100% { opacity: 1; clip-path: inset(0 0 0 0); }
-}
-
-@keyframes introClosedZoom {
-  to { transform: translate(-50%, -50%) scale(1.04); }
+  0% { opacity: 0; filter: grayscale(0.12) contrast(1.14) brightness(0.98) blur(10px); transform: translate(-50%, -50%) scale(1.08); }
+  100% { opacity: 1; filter: grayscale(0.12) contrast(1.14) brightness(0.98) blur(0); transform: translate(-50%, -50%) scale(1); }
 }
 
 @keyframes introClosedOut {
   to {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.98);
+    transform: translate(-50%, -50%) scale(0.97);
   }
 }
 
 @keyframes introShoutIn {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.86); }
-  100% { opacity: 1; transform: translate(-50%, -50%) scale(1.14); }
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.88); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1.16); }
 }
 
 @keyframes introShoutSettle {
-  to { transform: translate(-50%, -50%) scale(1.05); }
-}
-
-@keyframes introGrain {
-  0%, 100% { opacity: 0; }
-  10%, 30%, 50% { opacity: 0.5; }
-  20%, 40% { opacity: 0.15; }
-}
-
-@keyframes introFlash {
-  0% { opacity: 0; }
-  35% { opacity: 1; }
-  100% { opacity: 0.18; }
+  to { transform: translate(-50%, -50%) scale(1.06); }
 }
 
 @keyframes introFadeOut {
@@ -248,11 +325,15 @@ body.intro-active {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: scale(1.02);
+    transform: scale(1.03);
   }
 }
 
 @media (max-width: 480px) {
+  .intro__bar {
+    height: 11%;
+  }
+
   .intro__portrait--shout {
     background-position: 34% center;
   }
@@ -267,6 +348,9 @@ body.intro-active {
   }
 
   .intro__grain,
+  .intro__smoke,
+  .intro__sweep,
+  .intro__particles,
   .intro::before,
   .intro__portrait--closed,
   .intro__portrait--shout {
